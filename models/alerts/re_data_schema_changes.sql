@@ -22,13 +22,20 @@
 
     {% set detected_times = run_query(last_data_points) %}
 
-    {% set times_list = detected_times.columns[0].values() %}
-    {% set most_recent_time = times_list[0] %}
-
-    {% if times_list | length > 1 %}
-        {% set prev_most_recent = times_list[1] %}
+    {% if detected_times is none or (detected_times.columns | length) == 0 %}
+        {% set times_list = () %}
     {% else %}
-        {% set prev_most_recent = times_list[0] %}
+        {% set times_list = detected_times.columns[0].values() %}
+    {% endif %}
+    {% if (times_list | length) == 0 %}
+        {% set times_list = () %}
+    {% else %}
+        {% set most_recent_time = times_list[0] %}
+        {% if (times_list | length) > 1 %}
+            {% set prev_most_recent = times_list[1] %}
+        {% else %}
+            {% set prev_most_recent = times_list[0] %}
+        {% endif %}
     {% endif %}
 {% else %}
     {% set times_list = () %}
