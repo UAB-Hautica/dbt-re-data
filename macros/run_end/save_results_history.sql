@@ -6,11 +6,11 @@
 {%- endmacro %}
 
 {% macro default__save_test_history_impl(results) %}
-    -- depends_on: {{ ref('re_data_test_history') }}
     {# dbt --empty turns ref() into a subquery. BigQuery rejects INSERT INTO (subquery). #}
     {% if flags.EMPTY %}
         {{ return('') }}
     {% endif %}
+    -- depends_on: {{ ref('re_data_test_history') }}
     {% set command = flags.WHICH %}
     {% if execute and results and command in ('test', 'build') %}
         {% set tests = [] %}
